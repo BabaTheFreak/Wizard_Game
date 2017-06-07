@@ -6,7 +6,7 @@ public class Wizard extends GameObject {
     Handler handler;
 
     public Wizard(int x, int y, ID id, Handler handler) {
-        super(x, y, id);
+        super(x, y, id, handler);
         this.handler = handler;
     }
 
@@ -14,6 +14,8 @@ public class Wizard extends GameObject {
     public void tick() {
         x += velX;
         y += velY;
+
+        collision();
 
         //movement
         if(handler.isUp()) velY = -5;
@@ -27,6 +29,21 @@ public class Wizard extends GameObject {
 
         if(handler.isLeft()) velX = -5;
         else if(!handler.isRight()) velX = 0;
+    }
+
+    private void collision() {
+        for (int i = 0; i < handler.objects.size(); i ++) {
+            GameObject tempObject = handler.objects.get(i);
+
+            if(tempObject.getId() == ID.Block) {
+                if(getBounds().intersects(tempObject.getBounds())) {
+                    x += velX * -1;
+                    y += velY * -1;
+                }
+            }
+        }
+
+
     }
 
     @Override
